@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Extensioons/" />
+    <Folder Include="Extensions/" />
   </ItemGroup>
 
 </Project>
