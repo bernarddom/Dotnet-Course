@@ -3,15 +3,18 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { Nav } from "../layout/nav/nav";
+import { AccountService } from '../core/services/account-service';
+import { Home } from '../features/home/home';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Nav],
+  imports: [RouterOutlet, Nav, Home],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App implements OnInit{
-  private http = inject(HttpClient)
+  private http = inject(HttpClient);
+  private accountService = inject(AccountService)
   protected readonly title = signal('Dating app');
   protected members = signal<any>([]);
   async ngOnInit() {
@@ -21,6 +24,14 @@ export class App implements OnInit{
     //   complete: () => console.log("Completed the http request")
     // })
     this.members.set(await this.getMembers())
+    this.setCurrentUser();
+  }
+
+  setCurrentUser(){
+    const userString = localStorage.getItem("user");
+    if (!userString) return;
+    const user = JSON.parse(userString);
+    this.accountService.currentUser.set(user);
   }
 
   async getMembers() {
